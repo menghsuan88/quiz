@@ -227,7 +227,7 @@
             };
 
             try {
-                // 發送至 Google Apps Script
+                // 發送至 Google Apps Script (使用 no-cors 模式)
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -235,7 +235,7 @@
                     body: JSON.stringify(payload)
                 });
 
-                // 模擬等待並顯示成功
+                // 模擬提交後顯示成功畫面
                 setTimeout(() => {
                     document.getElementById('success-overlay').style.display = 'flex';
                     btn.disabled = false;
@@ -243,8 +243,8 @@
                 }, 1000);
 
             } catch (e) {
-                console.error("提交失敗:", e);
-                alert("提交失敗，請重新嘗試。");
+                console.error("提交錯誤:", e);
+                alert("提交失敗，請檢查網路。");
                 btn.disabled = false;
                 loader.classList.add('hidden');
             }
