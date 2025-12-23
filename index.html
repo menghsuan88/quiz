@@ -9,7 +9,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
         
-        :root {
+        :root { 
             --dhl-yellow: #FFCC00;
             --dhl-red: #D40511;
             --dhl-dark-red: #B3040E;
@@ -62,7 +62,7 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- 提交成功覆蓋層 -->
+    <!-- 成功提交覆蓋層 -->
     <div id="success-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-6 text-center">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full animate__animated animate__bounceIn">
             <div class="text-6xl mb-4">✅</div>
@@ -72,14 +72,14 @@
         </div>
     </div>
 
-    <!-- 1. 登入/開始頁面 -->
-    <div id="login-container" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 animate__animated animate__fadeIn">
+    <!-- 1. 資訊輸入頁面 -->
+    <div id="start-container" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 animate__animated animate__fadeIn">
         <div class="flex justify-center mb-6">
-            <div class="dhl-red-bg text-white px-6 py-2 font-black italic text-2xl tracking-tighter">DHL HEALTH CHECKUP QUIZ</div>
+            <div class="dhl-red-bg text-white px-6 py-2 font-black italic text-2xl tracking-tighter">HEALTH QUIZ 2025</div>
         </div>
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">2025員工健檢異常有獎徵答</h1>
-            <p class="text-gray-500 font-medium">填寫基本資料，滿分即可參加抽獎🎁</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">員工健檢異常有獎徵答</h1>
+            <p class="text-gray-500 font-medium">填寫參與資料，滿分即可參加抽獎🎁</p>
         </div>
         <div class="space-y-6">
             <div>
@@ -91,8 +91,9 @@
                 <input type="text" id="user-name" placeholder="請輸入完整姓名" class="w-full px-4 py-3 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-[#D40511] transition">
             </div>
             <button onclick="startQuiz()" class="w-full btn-dhl font-bold py-4 rounded-xl shadow-lg text-lg">
-                立即開始 GO！
+                開始挑戰 GO！
             </button>
+            <p class="text-[10px] text-gray-400 text-center uppercase tracking-widest">Internal Use Only</p>
         </div>
     </div>
 
@@ -103,8 +104,8 @@
         </div>
         <div class="p-8">
             <div class="flex justify-between items-center mb-6">
-                <span id="question-number" class="dhl-red-text font-bold text-sm tracking-widest uppercase">題目 1 / 4</span>
-                <span id="score-display" class="bg-red-100 dhl-red-text px-3 py-1 rounded-full text-xs font-bold">分數: 0</span>
+                <span id="question-number" class="dhl-red-text font-bold text-sm tracking-widest uppercase">Q 1 / 4</span>
+                <span id="score-display" class="bg-red-100 dhl-red-text px-3 py-1 rounded-full text-xs font-bold">SCORE: 0</span>
             </div>
             <h2 id="question-text" class="text-2xl font-bold text-gray-800 mb-8 leading-tight">載入中...</h2>
             <div id="options-container" class="space-y-4"></div>
@@ -115,9 +116,9 @@
     <!-- 3. 結果頁面 -->
     <div id="result-container" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-lg p-10 text-center animate__animated animate__zoomIn">
         <div class="mb-4">
-            <span id="result-icon" class="text-6xl">🏆</span>
+            <span class="text-6xl">🏆</span>
         </div>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">測驗完成！</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">挑戰完成！</h2>
         
         <div class="bg-gray-50 rounded-xl py-2 px-4 mb-6 inline-block border-l-4 border-[#D40511]">
             <p class="text-gray-600 text-xs">挑戰者：<span id="display-user-info" class="font-bold text-gray-900"></span></p>
@@ -141,7 +142,7 @@
         const quizData = [
             { question: "以下何者為脂肪肝高風險因子？", options: ["攝取高熱量、高脂肪食物", "肥胖體位", "過量飲酒", "以上皆是"], correct: 3 },
             { question: "請問18歲以上成人，BMI(身體質量指數)超過多少即是過重？", options: ["18", "20", "22", "24"], correct: 3 },
-            { question: "小明是一位32歲女性，她的體脂率檢測結果為31.1，請問她的體脂是否在健康理想範圍？", options: ["是", "否"], correct: 1 },
+            { question: "女性體脂率檢測結果為 31.1，請問體脂是否在健康理想範圍？", options: ["是", "否"], correct: 1 },
             { question: "以下何者不能改善脂肪肝、BMI過高、體脂率過高的問題？", options: ["均衡飲食", "經常喝含糖飲料", "規律運動", "戒菸"], correct: 1 },
         ];
 
@@ -153,7 +154,7 @@
             const name = document.getElementById('user-name').value.trim();
             if (!id || !name) { alert("請填寫員工編號與姓名！"); return; }
             userData = { id, name };
-            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('start-container').classList.add('hidden');
             document.getElementById('quiz-container').classList.remove('hidden');
             showQuestion();
         }
@@ -161,7 +162,7 @@
         function showQuestion() {
             canAnswer = true;
             const q = quizData[currentQuestion];
-            document.getElementById('question-number').innerText = `題目 ${currentQuestion + 1} / ${quizData.length}`;
+            document.getElementById('question-number').innerText = `Q ${currentQuestion + 1} / ${quizData.length}`;
             document.getElementById('question-text').innerText = q.question;
             document.getElementById('progress-bar').style.width = `${(currentQuestion / quizData.length) * 100}%`;
             document.getElementById('feedback').classList.add('hidden');
@@ -185,19 +186,19 @@
             if (idx === q.correct) {
                 score += (100 / quizData.length);
                 btn.classList.add('border-green-500', 'bg-green-50');
-                showFeedback("答對了！✨", "bg-green-500");
+                showFeedback("Correct! ✨", "bg-green-500");
             } else {
                 btn.classList.add('border-red-500', 'bg-red-50');
-                showFeedback("答錯了！", "dhl-red-bg");
+                showFeedback("Wrong!", "dhl-red-bg");
             }
 
-            document.getElementById('score-display').innerText = `分數: ${Math.round(score)}`;
+            document.getElementById('score-display').innerText = `SCORE: ${Math.round(score)}`;
             
             setTimeout(() => {
                 currentQuestion++;
                 if (currentQuestion < quizData.length) showQuestion();
                 else showResult();
-            }, 1000);
+            }, 800);
         }
 
         function showFeedback(text, cls) {
@@ -220,22 +221,18 @@
             btn.disabled = true;
             loader.classList.remove('hidden');
 
-            const payload = {
-                id: userData.id,
-                name: userData.name,
-                score: Math.round(score)
-            };
-
             try {
-                // 發送至 Google Apps Script (使用 no-cors 模式)
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        id: userData.id,
+                        name: userData.name,
+                        score: Math.round(score)
+                    })
                 });
 
-                // 模擬提交後顯示成功畫面
                 setTimeout(() => {
                     document.getElementById('success-overlay').style.display = 'flex';
                     btn.disabled = false;
@@ -243,8 +240,8 @@
                 }, 1000);
 
             } catch (e) {
-                console.error("提交錯誤:", e);
-                alert("提交失敗，請檢查網路。");
+                console.error("Submit Error:", e);
+                alert("提交失敗，請檢查網路連線。");
                 btn.disabled = false;
                 loader.classList.add('hidden');
             }
