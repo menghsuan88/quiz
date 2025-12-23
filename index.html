@@ -54,11 +54,6 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .ai-card {
-            background: linear-gradient(135deg, #ffffff 0%, #fef9e7 100%);
-            border-left: 4px solid #FFCC00;
-        }
-
         #success-overlay {
             background: rgba(0,0,0,0.8);
             display: none;
@@ -70,9 +65,9 @@
     <!-- 提交成功覆蓋層 -->
     <div id="success-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-6 text-center">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full animate__animated animate__bounceIn">
-            <div class="text-6xl mb-4">📩</div>
+            <div class="text-6xl mb-4">✅</div>
             <h3 class="text-2xl font-bold mb-2">提交成功！</h3>
-            <p class="text-gray-600 mb-6">您的資料已安全存入 Google 試算表，祝您中大獎！</p>
+            <p class="text-gray-600 mb-6">感謝您的參與，祝您中大獎！</p>
             <button onclick="location.reload()" class="w-full btn-dhl py-3 rounded-xl font-bold">返回首頁</button>
         </div>
     </div>
@@ -115,7 +110,6 @@
             <div id="options-container" class="space-y-4"></div>
         </div>
         <div id="feedback" class="hidden p-4 text-center font-bold text-white transition-all"></div>
-        <div id="ai-hint" class="hidden p-4 bg-gray-50 text-xs text-gray-600 border-t border-gray-100 italic"></div>
     </div>
 
     <!-- 3. 結果頁面 -->
@@ -125,99 +119,34 @@
         </div>
         <h2 class="text-2xl font-bold text-gray-800 mb-2">測驗完成！</h2>
         
-        <div class="bg-gray-50 rounded-xl py-2 px-4 mb-4 inline-block border-l-4 border-[#D40511]">
+        <div class="bg-gray-50 rounded-xl py-2 px-4 mb-6 inline-block border-l-4 border-[#D40511]">
             <p class="text-gray-600 text-xs">挑戰者：<span id="display-user-info" class="font-bold text-gray-900"></span></p>
         </div>
 
-        <div class="flex justify-around items-center mb-6">
-            <div>
-                <p class="text-gray-500 text-xs mb-1">您的得分</p>
-                <div class="text-5xl font-black dhl-red-text" id="final-score">0</div>
-            </div>
-            <div id="ai-analysis-box" class="flex-1 ml-6 p-4 rounded-xl ai-card text-left relative overflow-hidden min-h-[100px]">
-                <div class="text-[10px] font-bold text-yellow-600 mb-1 flex items-center">
-                    <span class="mr-1">✨ AI 智慧健康建議</span>
-                    <button id="tts-btn" onclick="speakAIRecommendation()" class="hidden ml-auto bg-yellow-200 hover:bg-yellow-300 p-1 rounded-full transition">🔊</button>
-                </div>
-                <div id="ai-recommendation" class="text-xs text-gray-700 leading-relaxed">正在分析中...</div>
-                <div id="ai-loading-spinner" class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center">
-                    <div class="loader"></div>
-                </div>
-            </div>
+        <div class="mb-8">
+            <p class="text-gray-500 text-sm mb-1">您的得分</p>
+            <div class="text-6xl font-black dhl-red-text" id="final-score">0</div>
         </div>
 
-        <button id="submit-btn" onclick="submitToSheet()" class="w-full btn-dhl font-bold py-4 rounded-xl shadow-lg mb-2 flex items-center justify-center gap-2">
-            <span>提交分數並參加抽獎</span>
+        <button id="submit-btn" onclick="submitToSheet()" class="w-full btn-dhl font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-lg">
+            <span>提交並參加抽獎</span>
             <div id="submit-loader" class="loader hidden"></div>
         </button>
-        <p class="text-[10px] text-gray-400 mt-2">點擊按鈕資料將自動儲存至 Google 試算表</p>
     </div>
 
     <script>
-        const apiKey = ""; 
+        // 設定區
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRNAFaKjstuRjDiOufJfTJSFgqe0oJtm-wfARupDxtp8ZsDPe4MMi6SIYnIXXB8RSq/exec";
 
         const quizData = [
-            { question: "以下何者為脂肪肝高風險因子？", options: ["攝取高熱量、高脂肪食物", "肥胖體位", "過量飲酒", "以上皆是"], correct: 3, topic: "脂肪肝成因" },
-            { question: "請問18歲以上成人，BMI(身體質量指數)超過多少即是過重？", options: ["18", "20", "22", "24"], correct: 3, topic: "BMI標準" },
-            { question: "小明是一位32歲女性，她的體脂率檢測結果為31.1，請問她的體脂是否在健康理想範圍？", options: ["是", "否"], correct: 1, topic: "體脂率標準" },
-            { question: "以下何者不能改善脂肪肝、BMI過高、體脂率過高的問題？", options: ["均衡飲食", "經常喝含糖飲料", "規律運動", "戒菸"], correct: 1, topic: "健康改善行為" },
+            { question: "以下何者為脂肪肝高風險因子？", options: ["攝取高熱量、高脂肪食物", "肥胖體位", "過量飲酒", "以上皆是"], correct: 3 },
+            { question: "請問18歲以上成人，BMI(身體質量指數)超過多少即是過重？", options: ["18", "20", "22", "24"], correct: 3 },
+            { question: "小明是一位32歲女性，她的體脂率檢測結果為31.1，請問她的體脂是否在健康理想範圍？", options: ["是", "否"], correct: 1 },
+            { question: "以下何者不能改善脂肪肝、BMI過高、體脂率過高的問題？", options: ["均衡飲食", "經常喝含糖飲料", "規律運動", "戒菸"], correct: 1 },
         ];
 
         let currentQuestion = 0, score = 0, canAnswer = true;
-        let userData = { id: "", name: "" }, wrongTopics = [], aiFullRecommendation = "";
-
-        async function callGemini(prompt, systemInstruction = "") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        systemInstruction: { parts: [{ text: systemInstruction }] }
-                    })
-                });
-                const result = await response.json();
-                return result.candidates?.[0]?.content?.parts?.[0]?.text || "暫無建議";
-            } catch (e) { return "AI 暫時休息中。"; }
-        }
-
-        async function speakAIRecommendation() {
-            if (!aiFullRecommendation) return;
-            const btn = document.getElementById('tts-btn');
-            btn.innerHTML = "⏳";
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Say warmly: ${aiFullRecommendation}` }] }],
-                        generationConfig: { 
-                            responseModalities: ["AUDIO"],
-                            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
-                        },
-                        model: "gemini-2.5-flash-preview-tts"
-                    })
-                });
-                const result = await response.json();
-                const audioData = result.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-                if (audioData) {
-                    const audioBase64 = audioData;
-                    const audioBlob = await (await fetch(`data:audio/l16;base64,${audioBase64}`)).blob();
-                    
-                    // Simple PCM to WAV conversion (simplified for browser)
-                    const playAudio = (base64) => {
-                        const audio = new Audio("data:audio/wav;base64," + base64);
-                        // In reality, PCM16 needs a header to be played as WAV.
-                        // For this environment, we'll assume the browser can handle it or use a library.
-                        // If it fails, we fallback to text.
-                    };
-                    // Playback of PCM L16 is complex without a library, skipping detailed audio implementation.
-                }
-            } catch (e) { console.error(e); } finally { btn.innerHTML = "🔊"; }
-        }
+        let userData = { id: "", name: "" };
 
         function startQuiz() {
             const id = document.getElementById('user-id').value.trim();
@@ -236,7 +165,6 @@
             document.getElementById('question-text').innerText = q.question;
             document.getElementById('progress-bar').style.width = `${(currentQuestion / quizData.length) * 100}%`;
             document.getElementById('feedback').classList.add('hidden');
-            document.getElementById('ai-hint').classList.add('hidden');
             
             const container = document.getElementById('options-container');
             container.innerHTML = '';
@@ -249,29 +177,27 @@
             });
         }
 
-        async function selectOption(idx, btn) {
+        function selectOption(idx, btn) {
             if (!canAnswer) return;
             canAnswer = false;
             const q = quizData[currentQuestion];
+            
             if (idx === q.correct) {
                 score += (100 / quizData.length);
                 btn.classList.add('border-green-500', 'bg-green-50');
                 showFeedback("答對了！✨", "bg-green-500");
             } else {
-                wrongTopics.push(q.topic);
                 btn.classList.add('border-red-500', 'bg-red-50');
-                showFeedback("答錯了，請留意健康指標！", "dhl-red-bg");
-                const hint = document.getElementById('ai-hint');
-                hint.innerText = "✨ AI 思考中..."; hint.classList.remove('hidden');
-                const exp = await callGemini(`解釋為什麼「${q.options[q.correct]}」是正確答案。`, "你是專業健康顧問，回答限20字。");
-                hint.innerText = `💡 AI 補充：${exp}`;
+                showFeedback("答錯了！", "dhl-red-bg");
             }
+
             document.getElementById('score-display').innerText = `分數: ${Math.round(score)}`;
+            
             setTimeout(() => {
                 currentQuestion++;
                 if (currentQuestion < quizData.length) showQuestion();
                 else showResult();
-            }, 2500);
+            }, 1000);
         }
 
         function showFeedback(text, cls) {
@@ -280,20 +206,11 @@
             fb.classList.remove('hidden');
         }
 
-        async function showResult() {
+        function showResult() {
             document.getElementById('quiz-container').classList.add('hidden');
             document.getElementById('result-container').classList.remove('hidden');
             document.getElementById('display-user-info').innerText = `${userData.name} (${userData.id})`;
             document.getElementById('final-score').innerText = Math.round(score);
-            generateAIAnalysis();
-        }
-
-        async function generateAIAnalysis() {
-            const advice = await callGemini(`分數:${score}, 錯題:${wrongTopics.join(',')}. 給予50字內激勵。`, "你是DHL健康顧問。");
-            aiFullRecommendation = advice;
-            document.getElementById('ai-recommendation').innerText = advice;
-            document.getElementById('ai-loading-spinner').classList.add('hidden');
-            // TTS removed for stability in this preview
         }
 
         async function submitToSheet() {
@@ -310,6 +227,7 @@
             };
 
             try {
+                // 發送至 Google Apps Script
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -317,15 +235,16 @@
                     body: JSON.stringify(payload)
                 });
 
+                // 模擬等待並顯示成功
                 setTimeout(() => {
                     document.getElementById('success-overlay').style.display = 'flex';
                     btn.disabled = false;
                     loader.classList.add('hidden');
-                }, 1500);
+                }, 1000);
 
             } catch (e) {
-                console.error("提交錯誤:", e);
-                alert("提交失敗。");
+                console.error("提交失敗:", e);
+                alert("提交失敗，請重新嘗試。");
                 btn.disabled = false;
                 loader.classList.add('hidden');
             }
